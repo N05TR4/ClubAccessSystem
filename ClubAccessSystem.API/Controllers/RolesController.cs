@@ -3,10 +3,12 @@ using ClubAccessSystem.API.Models.Roles;
 using ClubAccessSystem.Domain.Entities;
 using ClubAccessSystem.Persistence.Exceptions;
 using ClubAccessSystem.Persistence.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClubAccessSystem.API.Controllers
 {
+    [Authorize(Roles="1")]
     [Route("api/[controller]")]
     [ApiController]
     public class RolesController : ControllerBase

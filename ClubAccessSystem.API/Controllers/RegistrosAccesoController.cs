@@ -4,10 +4,12 @@ using ClubAccessSystem.API.Models.RegistrosAcceso;
 using ClubAccessSystem.Domain.Entities;
 using ClubAccessSystem.Persistence.Exceptions;
 using ClubAccessSystem.Persistence.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClubAccessSystem.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RegistrosAccesoController : ControllerBase

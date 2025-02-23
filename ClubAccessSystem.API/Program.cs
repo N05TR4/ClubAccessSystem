@@ -47,6 +47,9 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 //Swagger Config
 builder.Services.AddSwaggerConfiguration();
 
+//Cors
+builder.Services.AddCorsConfiguration();
+
 
 //logging
 CustomLogger.ConfigureLogging(builder.Logging);
@@ -55,6 +58,9 @@ var app = builder.Build();
 
 //Middleware Exception Manager
 app.UseCustomExceptionHandler();
+
+
+
 
 
 // Configure the HTTP request pipeline.
@@ -67,6 +73,9 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigin");
+
 app.UseAuthentication();
 app.UseAuthorization();
 

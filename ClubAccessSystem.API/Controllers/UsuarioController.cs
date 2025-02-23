@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ClubAccessSystem.API.Models.Usuarios;
 using ClubAccessSystem.Domain.Entities;
+using ClubAccessSystem.Persistence.Context;
 using ClubAccessSystem.Persistence.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClubAccessSystem.API.Controllers
 {
@@ -13,12 +15,14 @@ namespace ClubAccessSystem.API.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuariosRepository _usuariosRepository;
+        private readonly ClubContext _context;
         private readonly IMapper _mapper;
         private readonly ILogger<UsuarioController> _logger;
 
-        public UsuarioController(IUsuariosRepository usuariosRepository, IMapper mapper, ILogger<UsuarioController> logger)
+        public UsuarioController(IUsuariosRepository usuariosRepository, ClubContext context, IMapper mapper, ILogger<UsuarioController> logger)
         {
             _usuariosRepository = usuariosRepository;
+            _context = context;
             _mapper = mapper;
             _logger = logger;
         }
@@ -115,6 +119,40 @@ namespace ClubAccessSystem.API.Controllers
             return Ok(new { message = "Operación Exitosa!" });
         }
 
+        [HttpDelete("deleteUsuario/{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id)
+        {
+            try
+            {
+                
+                var usuario = await _context.Usuarios.FindAsync(id);
+
+                if (usuario == null)
+                {
+                    return NotFound(new { Success = false, Message = "Usuario no encontrado" });
+                }
+
+                // Llamar al método Delete del repositorio
+                var result = await _usuariosRepository.Delete(usuario);
+
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = $"Error al eliminar el usuario: {ex.Message}"
+                });
+            }
+        }
 
     }
 }
