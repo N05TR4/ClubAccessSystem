@@ -1,6 +1,8 @@
 ﻿using ClubAccessSystem.API.Models.Usuarios;
 using ClubAccessSystem.API.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ClubAccessSystem.API.Controllers
 {
@@ -20,7 +22,31 @@ namespace ClubAccessSystem.API.Controllers
         {
             var token = await _authService.AutenticarAsync(model.Email, model.Password);
             if (token == null) return Unauthorized();
-            return Ok(new { Token = token });
+
+            // Obtén el usuario para devolver la información junto con el token
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var usuario = userId != null ? await _authService.VerificarTokenAsync(userId) : null;
+
+            return Ok(new
+            {
+                token = token,
+                user = usuario
+            });
+        }
+
+        [Authorize] // Este atributo asegura que solo usuarios autenticados puedan acceder
+        [HttpGet("verify")]
+        public async Task<IActionResult> VerifyToken()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var usuario = await _authService.VerificarTokenAsync(userId);
+            if (usuario == null)
+                return Unauthorized();
+
+            return Ok(new { user = usuario });
         }
     }
 }

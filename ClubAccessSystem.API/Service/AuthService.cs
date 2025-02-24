@@ -1,9 +1,9 @@
-﻿using ClubAccessSystem.Persistence.Interfaces;
+﻿using ClubAccessSystem.API.Models.Usuarios;
+using ClubAccessSystem.Persistence.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
 
 namespace ClubAccessSystem.API.Service
 {
@@ -18,12 +18,9 @@ namespace ClubAccessSystem.API.Service
             _configuration = configuration;
         }
 
-
         public async Task<string?> AutenticarAsync(string email, string password)
         {
             var usuario = await _usuariosRepository.GetUsuariosByEmail(email);
-
-
             if (usuario == null || usuario.Data == null)
                 return null;
 
@@ -48,8 +45,24 @@ namespace ClubAccessSystem.API.Service
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
-
         }
 
+        public async Task<UsuarioResponse?> VerificarTokenAsync(string userId)
+        {
+            var resultado = await _usuariosRepository.GetById(int.Parse(userId));
+            if (resultado == null || resultado.Data == null)
+                return null;
+
+            // Crear un objeto de respuesta con solo la información necesaria
+            return new UsuarioResponse
+            {
+                UsuarioId = resultado.Data.UsuarioId,
+                Email = resultado.Data.Email,
+                RolId = resultado.Data.RolId
+                // Agrega otros campos necesarios, pero NO incluyas la contraseña
+            };
+        }
     }
+
+   
 }
