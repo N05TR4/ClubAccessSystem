@@ -57,13 +57,13 @@ namespace ClubAccessSystem.API.Tests.Controllers
         {
             // Arrange
             var usuarios = new List<Usuarios> { new Usuarios { UsuarioId = 1, Nombre = "Test" } };
-            var usuariosModels = new List<UsuariosModels> { new UsuariosModels { UsuarioId = 1, Nombre = "Test" } };
+            var usuariosModels = new List<UsuariosRolModels> { new UsuariosRolModels { UsuarioId = 1, Nombre = "Test" } };
 
-            _mockMapper.Setup(m => m.Map<List<UsuariosModels>>(usuarios))
+            _mockMapper.Setup(m => m.Map<List<UsuariosRolModels>>(usuarios))
                 .Returns(usuariosModels);
 
-            _mockRepository.Setup(repo => repo.GetAll())
-                .Returns(Task.FromResult(new OperationResult<List<UsuariosModels>>
+            _mockRepository.Setup(repo => repo.GetAllUsuarioRoll())
+                .Returns(Task.FromResult(new OperationResult<List<UsuariosRolModels>>
                 {
                     Success = true,
                     Data = usuariosModels
@@ -74,12 +74,63 @@ namespace ClubAccessSystem.API.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<OperationResult<List<UsuariosModels>>>(okResult.Value);
+            var returnValue = Assert.IsType<OperationResult<List<UsuariosRolModels>>>(okResult.Value);
             Assert.True(returnValue.Success);
             Assert.NotNull(returnValue.Data);
         }
 
-        
+
+        [Fact]
+        public async Task GetUsuarioById_WhenUserExists_ReturnsOkResult()
+        {
+            // Arrange
+            var id = 1;
+            var usuario = new Usuarios { UsuarioId = 1, Nombre = "Test" };
+            var usuarioModel = new UsuariosModels { UsuarioId = 1, Nombre = "Test" };
+
+            _mockRepository.Setup(repo => repo.GetById(id))
+                .Returns(Task.FromResult(new OperationResult<UsuariosModels>
+                {
+                    Success = true,
+                    Data = usuarioModel
+                }));
+
+            // Act
+            var result = await _controller.GetUsuarioById(id);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<OperationResult<UsuariosModels>>(okResult.Value);
+            Assert.True(returnValue.Success);
+            Assert.NotNull(returnValue.Data);
+        }
+
+        [Fact]
+        public async Task CreateUsuario_WithValidModel_ReturnsOkResult()
+        {
+            // Arrange
+            var usuarioModel = new AddUsuariosModels { Nombre = "Test" };
+            var usuario = new Usuarios { UsuarioId = 1, Nombre = "Test" };
+            var savedUsuarioModel = new UsuariosModels { UsuarioId = 1, Nombre = "Test" };
+
+            _mockMapper.Setup(m => m.Map<Usuarios>(usuarioModel))
+                .Returns(usuario);
+
+            _mockRepository.Setup(repo => repo.Save(It.IsAny<Usuarios>()))
+                .Returns(Task.FromResult(new OperationResult<UsuariosModels>
+                {
+                    Success = true,
+                    Data = savedUsuarioModel
+                }));
+
+            // Act
+            var result = await _controller.CreateUsuario(usuarioModel);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.NotNull(okResult.Value);
+        }
+
 
         [Fact]
         public async Task DeleteUsuario_WhenUserDoesNotExist_ReturnsNotFound()
