@@ -21,7 +21,26 @@ namespace ClubAccessSystem.Persistence.Repositories
 
         }
 
+        public async Task<OperationResult<List<UsuariosRolModels>>> GetAllUsuarioRoll()
+        {
+            return await SafeExecuteAsync(async () =>
+            {
+                var usuarioRol = await (from u in _dbContext.Usuarios
+                                  join r in _dbContext.Roles on u.RolId equals r.RolId
+                                  select new UsuariosRolModels
+                                  {
+                                      UsuarioId = u.UsuarioId,
+                                      Nombre = u.Nombre,
+                                      Email = u.Email,
+                                      Password = u.Password,
+                                      RolId = u.RolId,
+                                      Rol = r.Nombre
+                                      
+                                  }).ToListAsync();
 
+                return new OperationResult<List<UsuariosRolModels>> { Success = true, Data = usuarioRol};
+            });
+        }
 
         public async Task<OperationResult<UsuariosModels>> GetUsuariosByEmail(string email)
         {

@@ -2,15 +2,15 @@ import React from 'react'
 
 import { MagnifyingGlassIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-export default function UserTable({ users, searchQuery, setSearchQuery }) {
-    const handleDelete = (usuarioId) => {
-        console.log("Eliminar usuario con ID:", usuarioId);
+export default function ClientTable({ clients, searchQuery, setSearchQuery }) {
+    const handleDelete = (clienteId) => {
+        console.log("Eliminar cliente con ID:", clienteId);
         // Aquí puedes agregar la lógica para eliminar el usuario
     };
 
     // Función para manejar la edición de un usuario
-    const handleEdit = (usuarioId) => {
-        console.log("Editar usuario con ID:", usuarioId);
+    const handleEdit = (clienteId) => {
+        console.log("Editar cliente con ID:", clienteId);
         // Aquí puedes agregar la lógica para editar el usuario
     };
 
@@ -21,7 +21,7 @@ export default function UserTable({ users, searchQuery, setSearchQuery }) {
       <div className="relative flex-1 max-w-md mb-6">
         <input
           type="text"
-          placeholder="Buscar usuario..."
+          placeholder="Buscar Cliente..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -41,10 +41,10 @@ export default function UserTable({ users, searchQuery, setSearchQuery }) {
                 Nombre
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
+                Contacto
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Rol
+                Tipo Cliente
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Opciones
@@ -52,30 +52,30 @@ export default function UserTable({ users, searchQuery, setSearchQuery }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {users.map((user) => (
-              <tr key={user.usuarioId}>
+            {clients.map((client) => (
+              <tr key={client.clienteId}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {user.usuarioId}
+                  {client.clienteId}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {user.nombre}
+                  {client.nombre}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {user.email}
+                  {client.contacto}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" value={user.rolId}>
-                  {user.rol }
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" value={client.tipoCliente}>
+                  {client.nombreTipoCliente }
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div className="flex space-x-4">
                     <button
-                      onClick={() => handleEdit(user.usuarioId)}
+                      onClick={() => handleEdit(client.clienteId)}
                       className="text-blue-600 hover:text-blue-900"
                     >
                       <PencilIcon className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={() => handleDelete(user.usuarioId)}
+                      onClick={() => handleDelete(client.clienteId)}
                       className="text-red-600 hover:text-red-900"
                     >
                       <TrashIcon className="w-5 h-5" />

@@ -32,7 +32,7 @@ namespace ClubAccessSystem.API.Controllers
         public async Task<IActionResult> GetAllUsuario()
         {
             _logger.LogInformation("Getting all users");
-            var usuarios = await _usuariosRepository.GetAll();
+            var usuarios = await _usuariosRepository.GetAllUsuarioRoll();
 
             if (!usuarios.Success)
             {

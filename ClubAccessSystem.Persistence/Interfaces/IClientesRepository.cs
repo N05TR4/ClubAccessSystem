@@ -10,5 +10,6 @@ namespace ClubAccessSystem.Persistence.Interfaces
     public interface IClientesRepository : IBaseRepository<Clientes, ClientesModels>
     {
         Task<OperationResult<List<ClientesModels>>> GetClientesByTipo(int tipoClienteId);
+        Task<OperationResult<List<ClientesTipoClienteModels>>> GetAllClientesTipoCliente();
     }
 }

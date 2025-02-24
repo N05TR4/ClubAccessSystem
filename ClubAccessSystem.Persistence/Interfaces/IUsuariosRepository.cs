@@ -11,5 +11,6 @@ namespace ClubAccessSystem.Persistence.Interfaces
     {
         Task<OperationResult<UsuariosModels>> GetUsuariosByRol(int rolId);
         Task<OperationResult<UsuariosModels>> GetUsuariosByEmail(string email);
+        Task<OperationResult<List<UsuariosRolModels>>> GetAllUsuarioRoll();
     }
 }

@@ -28,7 +28,7 @@ namespace ClubAccessSystem.API.Controllers
         {
             try
             {
-                var cliente = await _clientesRepository.GetAll();
+                var cliente = await _clientesRepository.GetAllClientesTipoCliente();
 
                 if (cliente == null)
                     return NotFound(new { message = "No hay clientes disponibles." });
